@@ -1,8 +1,62 @@
-Vue.component()
+Vue.component('button-counter', {
+    props: ['cart_count'],
+    data: function() {
+        return {
+            count: 0
+        }
+    },
+    template: '<p>{{ cart_count }}</p>'
+});
+
+Vue.component('product-list', {
+    props: ['product'],
+    template: '<div class="card col-4">\n' +
+        '                <img :src="product.image_src" class="card-img-top" alt="..." height="200" style="object-fit:cover;">\n' +
+        '                <div class="card-body">\n' +
+        '                    <div class="">\n' +
+        '                        <h2> {{ product.product_name }}</h2>\n' +
+        '                        <h6 v-if="product.product_stock > 0" class="d-flex justify-content-between"><span>Price: {{ product.price }}</span><span>Stock: {{ product.product_stock }}</span>\n' +
+        '                        </h6>\n' +
+        '                        <h6 v-else-if="product.product_stock == 0">Out of Stock</h6>\n' +
+        '                    </div>\n' +
+        '                    <div class="text-center">\n' +
+        '                        <button type="button" v-if="product.product_stock == 0" class="btn btn-primary" disabled>Add to\n' +
+        '                            cart\n' +
+        '                        </button>\n' +
+        '                        <button type="button" v-else-if="product.product_stock > 0" class="btn btn-primary"\n' +
+        '                                v-on:click="$emit(\'add-cart-list\', index)">Add to cart\n' +
+        '                        </button>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '            </div>'
+});
+
+Vue.component('blog-post', {
+    props: ['post'],
+    template: '<button v-on:click="$emit(\'enlarge-text\', 1)">CLick Me to increase Post font Size</button>',
+    methods: {
+    }
+});
+
+Vue.component('custom-input', {
+    props: ['value'],
+    template: '<input v-bind:value="value" v-on:input="$emit(\'input\', $event.target.value)">'
+});
+
+Vue.component('alert-box', {
+    template: `
+    <div class="demo-alert-box">
+      <strong>Error!</strong>
+      <slot></slot>
+    </div>
+  `
+});
 
 var app = new Vue({
     el: '#app',
     data: {
+        postFontSize: 1,
+        searchText: "",
         products: [
             {
                 image_src: "images/guitar1.png",
@@ -38,6 +92,7 @@ var app = new Vue({
     ////////////////////////////////////////////////////////////
     methods: {
         addCartList: function (index) {
+            console.log("a");
             this.cart_count += 1;
             this.cartList.push(this.products[index]);
             this.products[index].product_stock--;
